@@ -9,9 +9,9 @@ module Geokit
         if !Geokit::Geocoders::google_client_id.nil? and !Geokit::Geocoders::google_cryptographic_key.nil?
           urlToSign = "/maps/api/geocode/json?latlng=#{Geokit::Inflector::url_escape(latlng.ll)}&client=#{Geokit::Geocoders::google_client_id}" + "#{(!Geokit::Geocoders::google_channel.nil? ? ("&channel="+ Geokit::Geocoders::google_channel) : "")}" + "&sensor=false"
           signature = sign_gmap_bus_api_url(urlToSign, Geokit::Geocoders::google_cryptographic_key)
-          submit_url =  "http://maps.googleapis.com" + urlToSign + "&signature=#{signature}"
+          submit_url =  "http://#{Geokit::Geocoders::GOOGLE_MAPS_API_DOMAIN}" + urlToSign + "&signature=#{signature}"
         else
-          submit_url = "http://maps.google.com/maps/api/geocode/json?sensor=false&latlng=#{Geokit::Inflector::url_escape(latlng.ll)}"
+          submit_url = "http://#{Geokit::Geocoders::GOOGLE_MAPS_DOMAIN}/maps/api/geocode/json?sensor=false&latlng=#{Geokit::Inflector::url_escape(latlng.ll)}"
         end
         res = self.call_geocoder_service(submit_url)
         return GeoLoc.new unless (res.is_a?(Net::HTTPSuccess) || res.is_a?(Net::HTTPOK))
@@ -51,9 +51,9 @@ module Geokit
         if !Geokit::Geocoders::google_client_id.nil? and !Geokit::Geocoders::google_cryptographic_key.nil?
           urlToSign = "/maps/api/geocode/json?address=#{Geokit::Inflector::url_escape(address_str)}#{bias_str}&client=#{Geokit::Geocoders::google_client_id}" + "#{(!Geokit::Geocoders::google_channel.nil? ? ("&channel="+ Geokit::Geocoders::google_channel) : "")}" + "&sensor=false"
           signature = sign_gmap_bus_api_url(urlToSign, Geokit::Geocoders::google_cryptographic_key)
-          submit_url =  "http://maps.googleapis.com" + urlToSign + "&signature=#{signature}"
+          submit_url =  "http://#{Geokit::Geocoders::GOOGLE_MAPS_API_DOMAIN}" + urlToSign + "&signature=#{signature}"
         else
-          submit_url = "http://maps.google.com/maps/api/geocode/json?sensor=false&address=#{Geokit::Inflector::url_escape(address_str)}#{bias_str}"
+          submit_url = "http://#{Geokit::Geocoders::GOOGLE_MAPS_DOMAIN}/maps/api/geocode/json?sensor=false&address=#{Geokit::Inflector::url_escape(address_str)}#{bias_str}"
         end
 
         res = self.call_geocoder_service(submit_url)
